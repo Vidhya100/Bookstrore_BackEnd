@@ -62,7 +62,5 @@ namespace BookStore.Controllers
                 throw;
             }
         }
-
-
     }
 }

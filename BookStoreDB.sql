@@ -35,5 +35,5 @@ create procedure spLogin(
 	)
 as
 begin
-	select COUNT(*) from Users where EmailId=@EmailId and Password=@Password;
+	select * from Users where EmailId=@EmailId and Password=@Password;
 end
