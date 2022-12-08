@@ -47,7 +47,7 @@ namespace BookStore
                         Description = "A simple example to Implement Swagger UI",
                     });
             });
-            /*// for Authorization
+           
             services.AddSwaggerGen(opt =>
             {
                 opt.SwaggerDoc("v2", new OpenApiInfo { Title = "MyAPI" });
@@ -74,7 +74,7 @@ namespace BookStore
                         new string[]{}
                     }
                 });
-            });*/
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

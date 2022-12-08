@@ -30,9 +30,10 @@ end
 
 --Login--
 create procedure spLogin(
-	@EmailId varchar(100)
+	@EmailId varchar(100),
+	@Password varchar(100)
 	)
 as
 begin
-	select * from Users where EmailId=@EmailId;
+	select COUNT(*) from Users where EmailId=@EmailId and Password=@Password;
 end
