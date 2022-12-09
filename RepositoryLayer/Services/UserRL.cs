@@ -33,7 +33,7 @@ namespace RepositoryLayer.Services
                 //var encrypt = ConvertoEncrypt(userModel.Password);
                 command.Parameters.AddWithValue("@FullName", userModel.FullName);
                 command.Parameters.AddWithValue("@EmailId", userModel.EmailId);
-                command.Parameters.AddWithValue("@Password", ConvertoEncrypt(userModel.Password));
+                command.Parameters.AddWithValue("@Password", userModel.Password);
                 command.Parameters.AddWithValue("@MobileNumber", userModel.MobileNumber);
                 //var dPass = ConvertoDecrypt(encrypt);
                 con.Open();
