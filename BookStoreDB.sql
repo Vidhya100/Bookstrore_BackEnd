@@ -79,3 +79,27 @@ as
 begin
 	select * from Admin where EmailId=@EmailId and Password = @Password;
 end
+
+--Book table--
+Create Table Book
+(
+	BookId bigint primary key identity(1,1),
+	Book_Name varchar(100), 
+	Author_Name varchar(100), 
+	Price bigint, 
+	Description varchar(2000), 
+	Rating varchar(100)
+)
+select * from Book;
+
+--Add Book--
+create or alter procedure spAddBook
+@Book_Name varchar(100), 
+@Author_Name varchar(100), 
+@Price bigint, 
+@Description varchar(1000), 
+@Rating varchar(100)
+as
+begin
+insert into Book values (@Book_Name, @Author_Name, @Price, @Description, @Rating )
+End
