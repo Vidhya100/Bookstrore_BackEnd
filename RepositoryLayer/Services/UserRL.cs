@@ -15,6 +15,7 @@ namespace RepositoryLayer.Services
     public class UserRL: IUserRL
     {
         private readonly IConfiguration iConfiguration;
+        public static string Key = "vidhya@@kfxcbv@";
 
         public UserRL(IConfiguration iconfiguration)
         {
@@ -29,12 +30,12 @@ namespace RepositoryLayer.Services
                 SqlCommand command = new SqlCommand("spRegister", con);
                 command.CommandType = CommandType.StoredProcedure;
 
-
+                //var encrypt = ConvertoEncrypt(userModel.Password);
                 command.Parameters.AddWithValue("@FullName", userModel.FullName);
                 command.Parameters.AddWithValue("@EmailId", userModel.EmailId);
-                command.Parameters.AddWithValue("@Password", userModel.Password);
+                command.Parameters.AddWithValue("@Password", ConvertoEncrypt(userModel.Password));
                 command.Parameters.AddWithValue("@MobileNumber", userModel.MobileNumber);
-
+                //var dPass = ConvertoDecrypt(encrypt);
                 con.Open();
                 var result = command.ExecuteNonQuery();
                 con.Close();
@@ -52,6 +53,25 @@ namespace RepositoryLayer.Services
             {
                 throw ;
             }
+        }
+        //for password encryption and decription
+        public static string ConvertoEncrypt(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+                return "";
+            password += Key;
+            var passwordBytes = Encoding.UTF8.GetBytes(password);
+            return Convert.ToBase64String(passwordBytes);
+        }
+
+        public static string ConvertoDecrypt(string base64EncodeData)
+        {
+            if (string.IsNullOrEmpty(base64EncodeData))
+                return "";
+            var base64EncodeBytes = Convert.FromBase64String(base64EncodeData);
+            var result = Encoding.UTF8.GetString(base64EncodeBytes);
+            result = result.Substring(0, result.Length - Key.Length);
+            return result;
         }
 
         //for login
@@ -77,12 +97,24 @@ namespace RepositoryLayer.Services
                     {
                         userLoginModel.EmailId = Convert.ToString(rd["EmailId"] == DBNull.Value ? default : rd["EmailId"]);
                         userLoginModel.Password = Convert.ToString(rd["Password"] == DBNull.Value ? default : rd["Password"]);
+
+                        //var password = Convert.ToString(rd["Password"] == DBNull.Value ? default : rd["Password"]);
+
+                        /*
+                         var dPass = ConvertoDecrypt(password);
+                         if (dPass == userLoginModel.Password)
+                         {
+                             var token = this.GenerateSecurityToken(userLoginModel.EmailId);
+                             return token;
+                         }*/
                     }
-                    var token = this.GenerateSecurityToken(userLoginModel.EmailId);
-                    return token;
+                   var token = this.GenerateSecurityToken(userLoginModel.EmailId);
+                       return token;
+                  
                 }
                 else 
                 {
+                    con.Close();
                     return null;
                 }
             }
@@ -90,12 +122,13 @@ namespace RepositoryLayer.Services
             {
                 throw;
             }
-
+            return default;
         }
 
         //JWT token
         public string GenerateSecurityToken(string email)
         {
+                 
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -120,5 +153,70 @@ namespace RepositoryLayer.Services
                 throw;
             }
         }
+
+        //for forgetpassword
+        public string ForgetPassword(string Emailid)
+        {
+            using SqlConnection con = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
+            try
+            {
+                SqlCommand cmd = new SqlCommand("spForgetPassword", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmailId", Emailid);
+                con.Open();
+                SqlDataReader rd = cmd.ExecuteReader();
+                if (rd.HasRows)
+                {
+                    while (rd.Read())
+                    {
+                        Emailid = Convert.ToString(rd["EmailId"] == DBNull.Value ? default : rd["EmailId"]);
+                    }
+                    var token = this.GenerateSecurityToken(Emailid);
+                    MSMQ msmq = new MSMQ();
+                    msmq.sendData2Queue(token);
+                    return token;
+                }
+                con.Close();
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+         }
+            //for reset password
+            public bool ResetPassword(string email, string newpassword, string confirmpassword)
+            {
+                using SqlConnection con = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
+                try
+                {
+                    if (newpassword == confirmpassword)
+                    {
+                        SqlCommand cmd = new SqlCommand("spResetPassword", con);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@EmailId", email);
+                        cmd.Parameters.AddWithValue("@Password", newpassword);
+                        con.Open();
+                        SqlDataReader rd = cmd.ExecuteReader();
+                        if (rd.HasRows)
+                        {
+                            while (rd.Read())
+                            {
+                                email = Convert.ToString(rd["EmailId"] == DBNull.Value ? default : rd["EmailId"]);
+                                newpassword = Convert.ToString(rd["Password"] == DBNull.Value ? default : rd["Password"]);
+                            }
+                            return true;
+                        }
+                        return true;
+                    }
+
+                    return false;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }        
     }
 }

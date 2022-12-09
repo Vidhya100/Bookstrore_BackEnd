@@ -37,3 +37,19 @@ as
 begin
 	select * from Users where EmailId=@EmailId and Password=@Password;
 end
+
+
+create or alter procedure spForgetPassword
+@EmailId varchar(50)
+as
+begin
+	select * from Users where EmailId=@EmailId
+end
+
+create or alter procedure spResetPassword
+@EmailId varchar(50),
+@Password varchar(100)
+as
+begin
+	update Users set Password=@Password where  EmailId=@EmailId
+END

@@ -1,20 +1,24 @@
 using BusinessLayer.Interface;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.HttpsPolicy;
+//using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+using System.Text;
+//using System.Threading.Tasks;
 
 namespace BookStore
 {
@@ -26,6 +30,7 @@ namespace BookStore
         }
 
         public IConfiguration Configuration { get; }
+        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -39,19 +44,15 @@ namespace BookStore
             services.AddSwaggerGen();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1",
-                    new OpenApiInfo
-                    {
-                        Version = "v1",
-                        Title = "Implement Swagger UI",
-                        Description = "A simple example to Implement Swagger UI",
-                    });
-            });
-           
-            services.AddSwaggerGen(opt =>
-            {
-                opt.SwaggerDoc("v2", new OpenApiInfo { Title = "MyAPI" });
-                opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Implement Swagger UI",
+                    Description = "A simple example to Implement Swagger UI",
+                });
+
+                //Swagger Authorization Implemantation 
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
                     Description = "Please enter token",
@@ -60,20 +61,40 @@ namespace BookStore
                     BearerFormat = "JWT",
                     Scheme = "bearer"
                 });
-                opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
-                    {
-                        new OpenApiSecurityScheme
+                     {
+                         new OpenApiSecurityScheme
                          {
                              Reference = new OpenApiReference
                              {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
+                                 Type=ReferenceType.SecurityScheme,
+                                 Id="Bearer"
                              }
                          },
-                        new string[]{}
-                    }
-                });
+                          new string[]{}
+                     }
+                 });
+
+            });
+            //Jwt Token 
+            services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"])) //Configuration["JwtToken:SecretKey"]
+                };
             });
         }
 
@@ -88,6 +109,8 @@ namespace BookStore
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

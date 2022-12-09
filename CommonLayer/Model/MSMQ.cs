@@ -35,12 +35,12 @@ namespace CommonLayer.Model
             {
                 var msg = MessageQ.EndReceive(e.AsyncResult);
                 string token = msg.Body.ToString();
-                string subject = "Fundoo Notes App Reset Link";
+                string subject = "BookStore App Reset Link";
                 string body = token;
                 var SMTP = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,
-                    Credentials = new NetworkCredential("vighneshmundhe7@gmail.com", "githpbtkfvclpsyw "),
+                    Credentials = new NetworkCredential("vighneshmundhe7@gmail.com", "ftbzbmxgzwnxbceo "),
                     EnableSsl = true
                 };
                 SMTP.Send("vighneshmundhe7@gmail.com", "vighneshmundhe7@gmail.com", subject, body);
@@ -49,7 +49,8 @@ namespace CommonLayer.Model
                 MessageQ.BeginReceive();
             }
             catch (Exception ex)
-            { }
+            {
+            }
         }
     }
 }
