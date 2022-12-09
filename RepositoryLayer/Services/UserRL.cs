@@ -80,7 +80,7 @@ namespace RepositoryLayer.Services
             using SqlConnection con = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
             try
             {
-                //LoginTokenModel loginTokenModel = new LoginTokenModel();
+               
                 SqlCommand command = new SqlCommand("spLogin", con);
                 command.CommandType = CommandType.StoredProcedure;
 

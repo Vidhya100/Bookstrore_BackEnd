@@ -23,9 +23,9 @@ namespace RepositoryLayer.Services
             this.iConfiguration = iconfiguration;
         }
 
-        public AdminModel AdminLogin(AdminLoginModel admin)
+        public string AdminLogin(AdminLoginModel admin)
         {
-            AdminModel adminModel = new AdminModel();
+            
             using SqlConnection con = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
             try
             {
@@ -42,13 +42,11 @@ namespace RepositoryLayer.Services
                 {
                     while (reader.Read())
                     {
-                        adminModel.AdminId = Convert.ToInt32(reader["AdminId"] == DBNull.Value ? default : reader["AdminId"]);
-                        adminModel.FullName = Convert.ToString(reader["FullName"] == DBNull.Value ? default : reader["FullName"]);
-                        adminModel.EmailId = Convert.ToString(reader["EmailId"] == DBNull.Value ? default : reader["EmailId"]);
-                        adminModel.MobileNumber = Convert.ToInt64(reader["MobileNumber"] == DBNull.Value ? default : reader["MobileNumber"]);
+                        admin.EmailId = Convert.ToString(reader["EmailId"] == DBNull.Value ? default : reader["EmailId"]);
+                        admin.Password = Convert.ToString(reader["Password"] == DBNull.Value ? default : reader["Password"]); ;
 
-                        adminModel.token = GenerateSecurityToken(adminModel.EmailId);
-                        return adminModel;
+                        var token = GenerateSecurityToken(admin.EmailId);
+                        return token;
                     }
                 }
                 else
