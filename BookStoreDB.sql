@@ -84,8 +84,8 @@ end
 Create Table Book
 (
 	BookId bigint primary key identity(1,1),
-	Book_Name varchar(100), 
-	Author_Name varchar(100), 
+	BookName varchar(100), 
+	AuthorName varchar(100), 
 	Price bigint, 
 	Description varchar(2000), 
 	Rating varchar(100)
@@ -94,12 +94,129 @@ select * from Book;
 
 --Add Book--
 create or alter procedure spAddBook
-@Book_Name varchar(100), 
-@Author_Name varchar(100), 
+@BookName varchar(100), 
+@AuthorName varchar(100), 
 @Price bigint, 
 @Description varchar(1000), 
 @Rating varchar(100)
 as
 begin
-insert into Book values (@Book_Name, @Author_Name, @Price, @Description, @Rating )
+insert into Book values (@BookName, @AuthorName, @Price, @Description, @Rating )
 End
+
+--Get All Books--
+create or alter procedure spGetAllBooks
+as
+begin
+select *from Book
+End
+--Get book by id--
+create or alter procedure spGetBookbyId
+@BookId bigint
+as
+begin
+select *from Book where BookId=@BookId
+End
+--Update book --
+create or alter procedure spUpdateBook
+@BookId bigint,
+@BookName varchar(100), 
+@AuthorName varchar(100),
+@Price bigint,
+@Description varchar(1000), 
+@Rating varchar(100)
+as
+begin
+UPDATE Book set
+BookName=@BookName, AuthorName=@AuthorName, Price=@Price, Description=@Description, Rating=@Rating
+where BookId=@BookId
+End
+
+--Delete book --
+create or alter procedure spDeleteBook
+@BookId bigint
+as
+begin
+DELETE from Book where BookId=@BookId
+End
+
+----wishlist table---
+create table Wishlist(
+	WishlistId int identity (1,1) primary key,
+	UserId int not null foreign key (UserId) references Users(UserId),
+	BookId bigint not null foreign key (BookId) references Book(BookId)
+	)
+
+--select table--
+select * from Wishlist;
+
+--stored procedure for wishlist--
+--add to wishlist--
+create procedure spAddToWishlist(
+	@BookId bigint,
+	@UserId int
+	)
+as
+begin
+	select * from Wishlist where BookId=@BookId and UserId=@UserId
+	begin
+		insert into Wishlist
+		values(@UserId,@BookId);
+	end
+end
+
+--remove from wishlist--
+create procedure spRemoveFromWishlist(
+	@WishlistId int
+	)
+as
+begin
+	delete from Wishlist where WishlistId = @WishlistId;
+end
+
+--get wishlist item--
+create procedure spGetAllWishlistItem(
+	@UserId int
+	)
+as
+begin
+	select wish.WishlistId,wish.BookId,wish.UserId,
+		book.BookName,book.BookImage,book.AuthorName,book.DiscountPrice,book.OriginalPrice		
+		from WishList wish inner join Books book
+		on wish.BookId = book.BookId
+		where wish.UserId = @UserId;
+end
+
+create table Cart(
+	CartId int identity(1,1) primary key,
+	BookInCart int default 1,
+	UserId int not null foreign key (UserId) references Users(UserId),
+	BookId int not null foreign key (BookId) references Books(BookId)
+)
+
+
+create table Cart(
+	CartId int identity(1,1) primary key,
+	BookInCart int default 1,
+	UserId int not null foreign key (UserId) references Users(UserId),
+	BookId int not null foreign key (BookId) references Books(BookId)
+)
+
+--select table--
+select * from Cart
+
+--stored procedure for cart--
+--Add to cart--
+create procedure spAddToCart(
+	@BookId int,
+	@BookInCart int,
+	@UserId int
+	)
+as
+begin
+	if(not exists(select * from Cart where BookId=@BookId and UserId=@UserId))
+	begin
+		insert into Cart(BookId,UserId)
+		values(@BookId,@UserId);
+	end
+end
