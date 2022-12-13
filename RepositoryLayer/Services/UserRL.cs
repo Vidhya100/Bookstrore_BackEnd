@@ -90,32 +90,14 @@ namespace RepositoryLayer.Services
                 
                 con.Open();
 
-                SqlDataReader rd = command.ExecuteReader();
-                if (rd.HasRows)
+                var result = command.ExecuteScalar();
+                if (result != null)
                 {
-                    while (rd.Read())
-                    {
-                        userLoginModel.EmailId = Convert.ToString(rd["EmailId"] == DBNull.Value ? default : rd["EmailId"]);
-                        userLoginModel.Password = Convert.ToString(rd["Password"] == DBNull.Value ? default : rd["Password"]);
-
-                        //var password = Convert.ToString(rd["Password"] == DBNull.Value ? default : rd["Password"]);
-
-                        /*
-                         var dPass = ConvertoDecrypt(password);
-                         if (dPass == userLoginModel.Password)
-                         {
-                             var token = this.GenerateSecurityToken(userLoginModel.EmailId);
-                             return token;
-                         }*/
-                    }
-                   var token = this.GenerateSecurityToken(userLoginModel.EmailId);
-                       return token;
-                  
-                }
-                else 
-                {
-                    con.Close();
-                    return null;
+                    string query = "SELECT UserId FROM Users WHERE EmailId = '" + userLoginModel.EmailId + "'";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    var Id = cmd.ExecuteScalar();
+                    var token = GenerateSecurityToken(userLoginModel.EmailId, Id.ToString());
+                    return token;
                 }
             }
             catch (Exception ex)
@@ -126,7 +108,7 @@ namespace RepositoryLayer.Services
         }
 
         //JWT token
-        public string GenerateSecurityToken(string email)
+        public string GenerateSecurityToken(string email, string UserId)
         {
                  
             try
@@ -138,7 +120,7 @@ namespace RepositoryLayer.Services
                     Subject = new ClaimsIdentity(new[]
                     {
                     new Claim(ClaimTypes.Email, email),
-                    //new Claim("UserId", UserId.ToString())
+                    new Claim("UserId", UserId.ToString())
                 }),
                     Expires = DateTime.UtcNow.AddMinutes(30),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -164,16 +146,13 @@ namespace RepositoryLayer.Services
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@EmailId", Emailid);
                 con.Open();
-                SqlDataReader rd = cmd.ExecuteReader();
-                if (rd.HasRows)
+                var result = cmd.ExecuteScalar();
+                if (result != null)
                 {
-                    while (rd.Read())
-                    {
-                        Emailid = Convert.ToString(rd["EmailId"] == DBNull.Value ? default : rd["EmailId"]);
-                    }
-                    var token = this.GenerateSecurityToken(Emailid);
-                    MSMQ msmq = new MSMQ();
-                    msmq.sendData2Queue(token);
+                    string query = "SELECT UserId FROM UserTable WHERE EmailId = '" + result + "'";
+                    SqlCommand que = new SqlCommand(query, con);
+                    var Id = cmd.ExecuteScalar();
+                    var token = GenerateSecurityToken(Emailid, Id.ToString());
                     return token;
                 }
                 con.Close();
