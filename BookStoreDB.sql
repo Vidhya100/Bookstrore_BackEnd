@@ -268,6 +268,85 @@ begin
 		on books.BookId=cart.BookId where cart.UserId = @UserId;
 end
 
+
+--Table for Address type--
+create table AddressType(
+	TypeId int identity(1,1) primary key,
+	AddType varchar(100)
+	)
+
+--adding types--
+insert into AddressType values('Home');
+insert into AddressType values('Work');
+insert into AddressType values('Other');
+
+--select table--
+select * from AddressType;
+
+--table for Address info--
+
+create table Address(
+	AddressId int identity(1,1) primary key,
+	Address varchar(max) not null,
+	City varchar(100) not null,
+	State varchar(100) not null,
+	TypeId int not null foreign key (TypeId) references AddressType(TypeId),
+	UserId int not null foreign key (UserId) references Users(UserId)
+	)
+
+--select table--
+select * from Address;
+
+--add address--
+create procedure spAddAddress(
+	@Address varchar(max),
+	@City varchar(100),
+	@State varchar(100),
+	@TypeId int,
+	@UserId int
+	)
+as
+begin
+	insert into Address
+	values(@Address,@City,@State,@TypeId,@UserId);
+end
+
+--update address--
+create procedure spUpdateAddress(
+	@AddressId int,
+	@Address varchar(max),
+	@City varchar(100),
+	@State varchar(100),
+	@TypeId int,
+	@UserId int
+	)
+as
+begin
+	update Address set
+	Address=@Address,City=@City,State=@State,TypeId=@TypeId where UserId=@UserId and AddressId=@AddressId;
+end
+
+--update address--
+create procedure spDeleteAddress
+@AddressId int
+as
+begin
+	delete from Address where AddressId = @AddressId;
+end
+
+--order table--
+create table Orders(
+	OrderId int identity(1,1) primary key,
+	OrderQty int not null,
+	TotalPrice float not null,
+	OrderDate Date not null,
+	UserId INT NOT NULL FOREIGN KEY REFERENCES Users(UserId),
+	BookId INT NOT NULL FOREIGN KEY REFERENCES Books(BookId),
+	AddressId int not null FOREIGN KEY REFERENCES Address(AddressId)
+	)
+
+--select table--
+select * from Orders
 /*
 SELECT UserId FROM Users WHERE EmailId = 3
 */
@@ -276,3 +355,5 @@ select * from Users
 select * from Book
 select * from Wishlist
 select * from Cart
+select * from Orders
+select * from Address;
