@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.Model;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,18 @@ namespace BusinessLayer.Services
         public CartBL(ICartRL icartRL)
         {
             this.icartRL = icartRL;
+        }
+
+        public CartModel AddToCart(CartModel cartModel,int userId)
+        {
+            try
+            {
+                return icartRL.AddToCart(cartModel,userId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

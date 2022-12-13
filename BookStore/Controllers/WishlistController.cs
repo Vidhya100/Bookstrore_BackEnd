@@ -29,11 +29,11 @@ namespace BookStore.Controllers
                 var result = iwishlistBL.AddToWishlist(bookId, userId);
                 if (result != null)
                 {
-                    return this.Ok(new { Status = true, message="Added to wishlist", Data = result });
+                    return this.Ok(new { Status = true, Data = result });
                 }
                 else
                 {
-                    return this.BadRequest(new { Status = false, message="Failed to add", Data = result });
+                    return this.BadRequest(new { Status = false, Data = result });
                 }
             }
             catch (Exception ex)
@@ -82,7 +82,7 @@ namespace BookStore.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw ;
             }
         }
     }

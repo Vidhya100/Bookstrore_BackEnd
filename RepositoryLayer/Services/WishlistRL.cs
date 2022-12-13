@@ -18,7 +18,7 @@ namespace RepositoryLayer.Services
         {
             this.iConfiguration = iConfiguration;
         }
-        public WishlistModel AddToWishlist(int bookId, int userId)
+        public string AddToWishlist(int bookId, int userId)
         {
             WishlistModel model = new WishlistModel();  
             using SqlConnection con = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
@@ -36,7 +36,7 @@ namespace RepositoryLayer.Services
 
                 if (result > 0)
                 {
-                    return model;
+                    return "added to wishlist";
                 }
                 else
                 {
@@ -79,7 +79,7 @@ namespace RepositoryLayer.Services
 
         public List<WishlistModel> GetWishlistItem(int userId)
         {
-            using SqlConnection con = new SqlConnection(iConfiguration["ConnectionString:BookStoreDB"]);
+            using SqlConnection con = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
             try
             {
                 List<WishlistModel> list = new List<WishlistModel>();
@@ -99,12 +99,12 @@ namespace RepositoryLayer.Services
                         wish.BookId = Convert.ToInt32(rdr["BookId"] == DBNull.Value ? default : rdr["BookId"]);
                         wish.UserId = Convert.ToInt32(rdr["UserId"] == DBNull.Value ? default : rdr["UserId"]);
                         wish.WishlistId = Convert.ToInt32(rdr["WishlistId"] == DBNull.Value ? default : rdr["WishlistId"]);
-                        wish.BookName = Convert.ToString(rdr["BookName"] == DBNull.Value ? default : rdr["BookName"]);
-                        wish.AuthorName = Convert.ToString(rdr["AuthorName"] == DBNull.Value ? default : rdr["AuthorName"]);
-                        wish.BookImage = Convert.ToString(rdr["BookImage"] == DBNull.Value ? default : rdr["BookImage"]);
-                        wish.DiscountPrice = Convert.ToInt32(rdr["DiscountPrice"] == DBNull.Value ? default : rdr["DiscountPrice"]);
-                        wish.OriginalPrice = Convert.ToInt32(rdr["OriginalPrice"] == DBNull.Value ? default : rdr["OriginalPrice"]);
-                        
+                        //wish.BookName = Convert.ToString(rdr["BookName"] == DBNull.Value ? default : rdr["BookName"]);
+                        //wish.AuthorName = Convert.ToString(rdr["AuthorName"] == DBNull.Value ? default : rdr["AuthorName"]);
+                        //wish.Description = Convert.ToString(rdr["Description"] == DBNull.Value ? default : rdr["Description"]);
+                        //wish.Price = Convert.ToString(rdr["Price"] == DBNull.Value ? default : rdr["Price"]);
+                        //wish.Rating = Convert.ToString(rdr["Rating"] == DBNull.Value ? default : rdr["Rating"]);
+                        list.Add(wish);
                     }
                     return list;
                 }
@@ -116,7 +116,7 @@ namespace RepositoryLayer.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw ;
             }
         }
     }

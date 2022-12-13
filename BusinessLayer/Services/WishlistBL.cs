@@ -16,7 +16,7 @@ namespace BusinessLayer.Services
         {
             this.iwishlistRL = iwishlistRL;
         }
-        public WishlistModel AddToWishlist(int bookId, int userId)
+        public string AddToWishlist(int bookId, int userId)
         {
             try
             {

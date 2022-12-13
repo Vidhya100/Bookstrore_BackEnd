@@ -83,12 +83,16 @@ end
 --Book table--
 Create Table Book
 (
-	BookId bigint primary key identity(1,1),
-	BookName varchar(100), 
-	AuthorName varchar(100), 
-	Price bigint, 
-	Description varchar(2000), 
-	Rating varchar(100)
+	BookId int identity(1,1) primary key,
+	BookName varchar(100) not null,
+	AuthorName varchar(100) not null,
+	Rating float,
+	ReviewerCount int,
+	DiscountPrice int not null,
+	OriginalPrice int not null,
+	BookDetail varchar(max) not null,
+	BookImage varchar(max) not null,
+	BookQuantity int not null 
 )
 select * from Book;
 
@@ -181,9 +185,9 @@ create procedure spGetAllWishlistItem(
 as
 begin
 	select wish.WishlistId,wish.BookId,wish.UserId,
-		book.BookName,book.BookImage,book.AuthorName,book.DiscountPrice,book.OriginalPrice		
-		from WishList wish inner join Books book
-		on wish.BookId = book.BookId
+		books.BookName,books.AuthorName,books.Price,books.Description,books.Rating		
+		from WishList wish inner join Book books
+		on wish.BookId = books.BookId
 		where wish.UserId = @UserId;
 end
 
@@ -191,24 +195,16 @@ create table Cart(
 	CartId int identity(1,1) primary key,
 	BookInCart int default 1,
 	UserId int not null foreign key (UserId) references Users(UserId),
-	BookId int not null foreign key (BookId) references Books(BookId)
-)
-
-
-create table Cart(
-	CartId int identity(1,1) primary key,
-	BookInCart int default 1,
-	UserId int not null foreign key (UserId) references Users(UserId),
-	BookId int not null foreign key (BookId) references Books(BookId)
+	BookId bigint not null foreign key (BookId) references Book(BookId)
 )
 
 --select table--
 select * from Cart
 
---stored procedure for cart--
+
 --Add to cart--
 create procedure spAddToCart(
-	@BookId int,
+	@BookId bigint,
 	@BookInCart int,
 	@UserId int
 	)
@@ -220,3 +216,12 @@ begin
 		values(@BookId,@UserId);
 	end
 end
+
+/*
+SELECT UserId FROM Users WHERE EmailId = 3
+*/
+
+select * from Users
+select * from Book
+select * from Wishlist
+select * from Cart
