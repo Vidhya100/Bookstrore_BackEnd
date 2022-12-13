@@ -79,7 +79,7 @@ namespace RepositoryLayer.Services
 
         public List<WishlistModel> GetWishlistItem(int userId)
         {
-            using SqlConnection con = new SqlConnection(iConfiguration["ConnectionString:BookStoreDB"]);
+            using SqlConnection con = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
             try
             {
                 List<WishlistModel> list = new List<WishlistModel>();
@@ -104,7 +104,7 @@ namespace RepositoryLayer.Services
                         wish.BookImage = Convert.ToString(rdr["BookImage"] == DBNull.Value ? default : rdr["BookImage"]);
                         wish.DiscountPrice = Convert.ToInt32(rdr["DiscountPrice"] == DBNull.Value ? default : rdr["DiscountPrice"]);
                         wish.OriginalPrice = Convert.ToInt32(rdr["OriginalPrice"] == DBNull.Value ? default : rdr["OriginalPrice"]);
-                        
+                        list.Add(wish);
                     }
                     return list;
                 }
