@@ -86,11 +86,11 @@ namespace BookStore.Controllers
 
         [HttpPut]
         [Route("Update")]
-        public IActionResult UpdateBooks(BookModel bookModel, long BookId)
+        public IActionResult UpdateBooks(BookModel bookModel)
         {
             try
             {
-                var result = ibookBL.UpdateBook(bookModel, BookId);
+                var result = ibookBL.UpdateBook(bookModel);
                 if (result != null)
 
                 {
