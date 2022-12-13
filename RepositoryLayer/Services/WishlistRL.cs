@@ -99,11 +99,11 @@ namespace RepositoryLayer.Services
                         wish.BookId = Convert.ToInt32(rdr["BookId"] == DBNull.Value ? default : rdr["BookId"]);
                         wish.UserId = Convert.ToInt32(rdr["UserId"] == DBNull.Value ? default : rdr["UserId"]);
                         wish.WishlistId = Convert.ToInt32(rdr["WishlistId"] == DBNull.Value ? default : rdr["WishlistId"]);
-                        //wish.BookName = Convert.ToString(rdr["BookName"] == DBNull.Value ? default : rdr["BookName"]);
-                        //wish.AuthorName = Convert.ToString(rdr["AuthorName"] == DBNull.Value ? default : rdr["AuthorName"]);
-                        //wish.Description = Convert.ToString(rdr["Description"] == DBNull.Value ? default : rdr["Description"]);
-                        //wish.Price = Convert.ToString(rdr["Price"] == DBNull.Value ? default : rdr["Price"]);
-                        //wish.Rating = Convert.ToString(rdr["Rating"] == DBNull.Value ? default : rdr["Rating"]);
+                        wish.BookName = Convert.ToString(rdr["BookName"] == DBNull.Value ? default : rdr["BookName"]);
+                        wish.AuthorName = Convert.ToString(rdr["AuthorName"] == DBNull.Value ? default : rdr["AuthorName"]);
+                        wish.BookImage = Convert.ToString(rdr["BookImage"] == DBNull.Value ? default : rdr["BookImage"]);
+                        wish.DiscountPrice = Convert.ToInt32(rdr["DiscountPrice"] == DBNull.Value ? default : rdr["DiscountPrice"]);
+                        wish.OriginalPrice = Convert.ToInt32(rdr["OriginalPrice"] == DBNull.Value ? default : rdr["OriginalPrice"]);
                         list.Add(wish);
                     }
                     return list;

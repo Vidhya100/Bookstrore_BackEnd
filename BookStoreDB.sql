@@ -95,66 +95,87 @@ Create Table Book
 	BookQuantity int not null 
 )
 select * from Book;
-
---Add Book--
-create or alter procedure spAddBook
-@BookName varchar(100), 
-@AuthorName varchar(100), 
-@Price bigint, 
-@Description varchar(1000), 
-@Rating varchar(100)
+--add books--
+create procedure spAddBook(
+	@BookName varchar(100),
+	@AuthorName varchar(100),
+	@Rating float,
+	@ReviewerCount int,
+	@DiscountPrice int,
+	@OriginalPrice int,
+	@BookDetail varchar(max),
+	@BookImage varchar(max),
+	@BookQuantity int
+	)
 as
 begin
-insert into Book values (@BookName, @AuthorName, @Price, @Description, @Rating )
-End
+	insert into Book
+	values(@BookName,@AuthorName,@Rating,@ReviewerCount,@DiscountPrice,@OriginalPrice,@BookDetail,@BookImage,@BookQuantity);
+end
 
---Get All Books--
-create or alter procedure spGetAllBooks
+--Update book--
+create procedure spUpdateBook(
+	@BookId int,
+	@BookName varchar(100),
+	@AuthorName varchar(100),
+	@Rating float,
+	@ReviewerCount int,
+	@DiscountPrice int,
+	@OriginalPrice int,
+	@BookDetail varchar(max),
+	@BookImage varchar(max),
+	@BookQuantity int
+	)
+as 
+begin
+	update Book set 
+	BookName= @BookName,
+	AuthorName= @AuthorName,
+	Rating = @Rating,
+	ReviewerCount= @ReviewerCount,
+	DiscountPrice = @DiscountPrice,
+	OriginalPrice = @OriginalPrice,
+	BookDetail= @BookDetail,
+	BookImage = @BookImage,
+	BookQuantity = @BookQuantity
+	where BookId = @BookId;
+end
+
+--Delete book--
+create procedure spDeleteBook(
+	@BookId int
+	)
 as
 begin
-select *from Book
-End
+	delete from Book where BookId=@BookId;
+end
+
+--Get all books--
+create procedure spGetAllBooks
+as
+begin
+	select * from Book;
+end
+
 --Get book by id--
-create or alter procedure spGetBookbyId
-@BookId bigint
+create procedure spGetBookById(
+	@BookId int
+	)
 as
 begin
-select *from Book where BookId=@BookId
-End
---Update book --
-create or alter procedure spUpdateBook
-@BookId bigint,
-@BookName varchar(100), 
-@AuthorName varchar(100),
-@Price bigint,
-@Description varchar(1000), 
-@Rating varchar(100)
-as
-begin
-UPDATE Book set
-BookName=@BookName, AuthorName=@AuthorName, Price=@Price, Description=@Description, Rating=@Rating
-where BookId=@BookId
-End
-
---Delete book --
-create or alter procedure spDeleteBook
-@BookId bigint
-as
-begin
-DELETE from Book where BookId=@BookId
-End
+	select * from Book where BookId=@BookId;
+end
 
 ----wishlist table---
 create table Wishlist(
 	WishlistId int identity (1,1) primary key,
 	UserId int not null foreign key (UserId) references Users(UserId),
-	BookId bigint not null foreign key (BookId) references Book(BookId)
+	BookId int not null foreign key (BookId) references Book(BookId)
 	)
 
 --select table--
 select * from Wishlist;
 
---stored procedure for wishlist--
 --add to wishlist--
 create procedure spAddToWishlist(
 	@BookId bigint,
@@ -185,38 +206,11 @@ create procedure spGetAllWishlistItem(
 as
 begin
 	select wish.WishlistId,wish.BookId,wish.UserId,
-		books.BookName,books.AuthorName,books.Price,books.Description,books.Rating		
+		books.BookName,books.BookImage,books.AuthorName,books.DiscountPrice,books.OriginalPrice		
 		from WishList wish inner join Book books
 		on wish.BookId = books.BookId
 		where wish.UserId = @UserId;
 end
-
-create table Cart(
-	CartId int identity(1,1) primary key,
-	BookInCart int default 1,
-	UserId int not null foreign key (UserId) references Users(UserId),
-	BookId bigint not null foreign key (BookId) references Book(BookId)
-)
-
---select table--
-select * from Cart
-
-
---Add to cart--
-create procedure spAddToCart(
-	@BookId bigint,
-	@BookInCart int,
-	@UserId int
-	)
-as
-begin
-	if(not exists(select * from Cart where BookId=@BookId and UserId=@UserId))
-	begin
-		insert into Cart(BookId,UserId)
-		values(@BookId,@UserId);
-	end
-end
-
 /*
 SELECT UserId FROM Users WHERE EmailId = 3
 */
