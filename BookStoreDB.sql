@@ -362,7 +362,7 @@ begin
 		set @TotalPrice = (select DiscountPrice from Book where BookId = @BookId);
 		set @OrderQty = (select BookQuantity from Cart where BookId = @BookId); 
 
-		set @TotalPrice = @OrderQty;
+		set @TotalPrice = @OrderQty*@TotalPrice;
 		
 		insert into Orders values(@OrderQty,@TotalPrice,GETDATE(),@UserId,@BookId,@AddressId);
 		update Book set BookQuantity = (BookQuantity - @OrderQty) where BookId = @BookId;
