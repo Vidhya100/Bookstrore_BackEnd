@@ -36,23 +36,14 @@ namespace RepositoryLayer.Services
                 command.Parameters.AddWithValue("@Password", admin.Password);
 
                 con.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                if (reader.HasRows)
+                var result = command.ExecuteScalar();
+                if (result != null)
                 {
-                    while (reader.Read())
-                    {
-                        admin.EmailId = Convert.ToString(reader["EmailId"] == DBNull.Value ? default : reader["EmailId"]);
-                        admin.Password = Convert.ToString(reader["Password"] == DBNull.Value ? default : reader["Password"]); ;
-
-                        var token = GenerateSecurityToken(admin.EmailId);
-                        return token;
-                    }
-                }
-                else
-                {
-                    con.Close();
-                    return null;
+                    string query = "SELECT AdminId FROM Users WHERE EmailId = '" + admin.EmailId + "'";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    var Id = cmd.ExecuteScalar();
+                    var token = GenerateSecurityToken(admin.EmailId, Id.ToString());
+                    return token;
                 }
             }
             catch (Exception ex)
@@ -63,7 +54,7 @@ namespace RepositoryLayer.Services
         }
 
         //JWT token
-        public string GenerateSecurityToken(string email)
+        public string GenerateSecurityToken(string email, string UserId)
         {
 
             try
@@ -75,7 +66,7 @@ namespace RepositoryLayer.Services
                     Subject = new ClaimsIdentity(new[]
                     {
                     new Claim(ClaimTypes.Email, email),
-                    //new Claim("UserId", UserId.ToString())
+                    new Claim("UserId", UserId.ToString())
                 }),
                     Expires = DateTime.UtcNow.AddMinutes(30),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
