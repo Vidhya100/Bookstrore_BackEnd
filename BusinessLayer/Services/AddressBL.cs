@@ -49,17 +49,17 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
-        /*
-        public CartModel AddToCart(int bookId, int userId)
+        public List<AddressModel> GetAllAddress(int UserId)
         {
             try
             {
-                return icartRL.AddToCart(bookId, userId);
+                return iaddressRL.GetAllAddress(UserId);
             }
             catch (Exception ex)
             {
                 throw;
             }
-        }*/
+        }
+        
     }
 }

@@ -10,5 +10,6 @@ namespace BusinessLayer.Interface
         public string AddAddress(AddressModel address, int userId);
         public AddressModel UpdateAddress(AddressModel address, int userId);
         public bool removeAddress(int addressId);
+        public List<AddressModel> GetAllAddress(int UserId);
     }
 }

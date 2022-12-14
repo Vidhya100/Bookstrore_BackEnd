@@ -88,7 +88,7 @@ namespace RepositoryLayer.Services
             
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("Sp_DeleteAddress", con);
+                    SqlCommand cmd = new SqlCommand("spDeleteAddress", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@AddressId ", addressId);
                     con.Open();
@@ -119,7 +119,7 @@ namespace RepositoryLayer.Services
                 List<AddressModel> addressList = new List<AddressModel>();
 
                 con.Open();
-                String query = "SELECT AddressId, Address, City, State, TypeId FROM AddressTable WHERE UserId = '" + UserId + "'";
+                String query = "SELECT AddressId, Address, City, State, TypeId FROM Address WHERE UserId = '" + UserId + "'";
                 SqlCommand cmd = new SqlCommand(query, con);
                 SqlDataReader rdr = cmd.ExecuteReader();
 
