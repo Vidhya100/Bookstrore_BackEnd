@@ -341,12 +341,43 @@ create table Orders(
 	TotalPrice float not null,
 	OrderDate Date not null,
 	UserId INT NOT NULL FOREIGN KEY REFERENCES Users(UserId),
-	BookId INT NOT NULL FOREIGN KEY REFERENCES Books(BookId),
+	BookId INT NOT NULL FOREIGN KEY REFERENCES Book(BookId),
 	AddressId int not null FOREIGN KEY REFERENCES Address(AddressId)
 	)
 
 --select table--
 select * from Orders
+
+create procedure spAddOrder(
+	@UserId int,
+	@BookId int,
+	@AddressId int
+	)
+as
+	declare @TotalPrice int;
+	declare @OrderQty int;
+begin
+	set @TotalPrice = (select DiscountPrice from Book where BookId = @BookId); 
+	set @OrderQty = (select BookQuantity from Cart where BookId = @BookId); 
+	if(exists(select * from Book where BookId = @BookId))
+	begin
+		Begin try
+			Begin Transaction
+				if((select BookQuantity from Book where BookId = @BookId)>= @OrderQty)
+				begin
+					insert into Orders values(@OrderQty,@TotalPrice*@OrderQty,GETDATE(),@UserId,@BookId,@AddressId);
+					update Book set BookQuantity = (BookQuantity - @OrderQty) where BookId = @BookId;
+					delete from Cart where BookId = @BookId and UserId = @UserId; 
+				end
+			commit Transaction
+		End try
+
+		Begin Catch
+				rollback;
+		End Catch
+	end
+end
+
 /*
 SELECT UserId FROM Users WHERE EmailId = 3
 */
