@@ -33,13 +33,85 @@ namespace RepositoryLayer.Services
                 var result = command.ExecuteNonQuery();
                 con.Close();
 
-                if (result == 3)
+                if (result != 0)
                 {
                     return "Order Placed";
                 }
                 else
                 {
                     return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ;
+            }
+        }
+        
+        public List<OrderModel> GetAllOrders(int userId)
+        {
+            using SqlConnection connection = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
+            try
+            {
+                List<OrderModel> orderList = new List<OrderModel>();
+                SqlCommand command = new SqlCommand("spGetAllOrders", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@UserId", userId);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        OrderModel order = new OrderModel();
+                        order.OrderId = Convert.ToInt32(reader["OrderId"] == DBNull.Value ? default : reader["OrderId"]);
+                        order.BookId = Convert.ToInt32(reader["BookId"] == DBNull.Value ? default : reader["BookId"]);
+                        order.UserId = Convert.ToInt32(reader["UserId"] == DBNull.Value ? default : reader["UserId"]);
+                        order.AddressId = Convert.ToInt32(reader["AddressId"] == DBNull.Value ? default : reader["AddressId"]);
+                        order.TotalPrice = Convert.ToDouble(reader["TotalPrice"] == DBNull.Value ? default : reader["TotalPrice"]);
+                        order.OrderQty = Convert.ToInt32(reader["OrderQty"] == DBNull.Value ? default : reader["OrderQty"]);
+                        order.OrderDate = Convert.ToDateTime(reader["OrderDate"] == DBNull.Value ? default : reader["OrderDate"]);
+                        
+                        orderList.Add(order);
+                    }
+                    return orderList;
+                }
+                else
+                {
+                    connection.Close();
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ;
+            }
+        }
+        
+        public bool RemoveOrder(int orderId)
+        {
+            using SqlConnection connection = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
+            try
+            {
+                SqlCommand command = new SqlCommand("spRemoveOrder", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@OrderId", orderId);
+
+                connection.Open();
+                var result = command.ExecuteNonQuery();
+                connection.Close();
+
+                if (result != 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
             catch (Exception ex)

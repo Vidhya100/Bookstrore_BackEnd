@@ -40,14 +40,15 @@ namespace BookStore.Controllers
             {
                 throw ;
             }
-        }/*
-        [HttpGet("Getorders")]
+        }
+        [HttpGet]
+        [Route("Getorders")]
         public IActionResult GetAllOrders()
         {
             try
             {
                 int userId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
-                var result = orderBL.GetAllOrders(userId);
+                var result = iOrderBL.GetAllOrders(userId);
                 if (result != null)
                 {
                     return this.Ok(new { Status = true, Message = "Order Details", Data = result });
@@ -62,14 +63,15 @@ namespace BookStore.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
-        [HttpDelete("DeleteOrder")]
+        
+        [HttpDelete]
+        [Route("DeleteOrder")]
         public IActionResult RemoveOrder(int orderId)
         {
             try
             {
                 int userId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
-                var result = orderBL.RemoveOrder(orderId);
+                var result = iOrderBL.RemoveOrder(orderId);
                 if (result == true)
                 {
                     return this.Ok(new { Status = true, Message = "Deleted" });
@@ -83,6 +85,6 @@ namespace BookStore.Controllers
             {
                 throw new Exception(ex.Message);
             }
-        }*/
+        }
     }
 }

@@ -26,17 +26,28 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
-        /*
-        public string AddAddress(AddressModel address, int userId)
+        public List<OrderModel> GetAllOrders(int userId)
         {
             try
             {
-                return iaddressRL.AddAddress(address, userId);
+                return iorderRL.GetAllOrders(userId);
             }
             catch (Exception ex)
             {
                 throw;
             }
-        }*/
+        }
+        public bool RemoveOrder(int orderId)
+        {
+            try
+            {
+                return iorderRL.RemoveOrder(orderId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }
