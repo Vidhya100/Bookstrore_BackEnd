@@ -39,7 +39,7 @@ namespace RepositoryLayer.Services
                 var result = command.ExecuteScalar();
                 if (result != null)
                 {
-                    string query = "SELECT AdminId FROM Users WHERE EmailId = '" + admin.EmailId + "'";
+                    string query = "SELECT AdminId FROM Admin WHERE EmailId = '" + admin.EmailId + "'";
                     SqlCommand cmd = new SqlCommand(query, con);
                     var Id = cmd.ExecuteScalar();
                     var token = GenerateSecurityToken(admin.EmailId, Id.ToString());

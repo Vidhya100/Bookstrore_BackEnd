@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace BookStore.Controllers
 {
+    [Authorize(Roles = Role.Users)]
     [Route("api/[controller]")]
     [ApiController]
     public class CartController : ControllerBase
@@ -18,7 +19,7 @@ namespace BookStore.Controllers
         {
             this.icartBL = icartBL;
         }
-        [Authorize]
+        
         [HttpPost]
         [Route("AddToCart")]
         public IActionResult AddToCart(int bookId)

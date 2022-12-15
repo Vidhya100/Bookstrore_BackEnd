@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace BookStore.Controllers
 {
+    [Authorize(Roles = Role.Users)]
     [Route("api/[controller]")]
     [ApiController]
     public class WishlistController : ControllerBase
@@ -18,7 +19,6 @@ namespace BookStore.Controllers
             this.iwishlistBL = iwishlistBL;
         }
 
-        [Authorize]
         [HttpPost]
         [Route("AddToWishlist")]
         public IActionResult AddToWishlist(int bookId)

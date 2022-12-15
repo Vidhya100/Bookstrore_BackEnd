@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace BookStore.Controllers
 {
+    [Authorize(Roles = Role.Users)]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -18,7 +19,7 @@ namespace BookStore.Controllers
         {
             this.iOrderBL = iOrderBL;
         }
-        [Authorize]
+       
         [HttpPost]
         [Route("Placeorder")]
         public IActionResult AddOrder(OrderModel orderModel)

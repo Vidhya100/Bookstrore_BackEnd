@@ -86,7 +86,7 @@ namespace BookStore.Controllers
                 throw;
             }
         }
-        [Authorize]
+        [Authorize(Roles = Role.Users)]
         [HttpPut]
         [Route("ResetPassword")]
         public IActionResult ResetPassword(string newPassword, string confirmPassword)
