@@ -17,7 +17,7 @@ namespace BookStore.Controllers
         {
             this.ibookBL = ibookBL;
         }
-        [Authorize(Roles = Role.Admin)]
+        //[Authorize(Roles = Role.Admin)]
         [HttpPost]
         [Route("AddBooks")]
         public IActionResult AddBook(BookModel bookModel)
@@ -85,7 +85,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize(Roles = Role.Admin)]
+        //[Authorize(Roles = Role.Admin)]
         [HttpPut]
         [Route("Update")]
         public IActionResult UpdateBooks(BookModel bookModel, long BookId)
@@ -108,7 +108,7 @@ namespace BookStore.Controllers
                 throw;
             }
         }
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         [HttpDelete]
         [Route("Delete")]
         public IActionResult deleteBook(long BookId)

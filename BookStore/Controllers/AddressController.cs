@@ -8,7 +8,6 @@ using System.Linq;
 
 namespace BookStore.Controllers
 {
-    [Authorize(Roles = Role.Users)]
     [Route("api/[controller]")]
     [ApiController]
     public class AddressController : ControllerBase
@@ -19,7 +18,7 @@ namespace BookStore.Controllers
         {
             this.iaddressBL = iaddressBL;
         }
-        
+        [Authorize]
         [HttpPost]
         [Route("AddAddress")]
         public IActionResult AddAddress(AddressModel address)

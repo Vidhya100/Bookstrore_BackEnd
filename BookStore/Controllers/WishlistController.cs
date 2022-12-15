@@ -19,6 +19,7 @@ namespace BookStore.Controllers
             this.iwishlistBL = iwishlistBL;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("AddToWishlist")]
         public IActionResult AddToWishlist(int bookId)

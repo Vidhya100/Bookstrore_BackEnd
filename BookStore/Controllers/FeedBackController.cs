@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace BookStore.Controllers
 {
-    [Authorize(Roles = Role.Users)]
+    //[Authorize(Roles = Role.Users)]
     [Route("api/[controller]")]
     [ApiController]
     public class FeedBackController : ControllerBase
@@ -19,7 +19,7 @@ namespace BookStore.Controllers
         {
             this.iFeedBackBL = iFeedBackBL;
         }
-        
+        [Authorize]
         [HttpPost]
         [Route("Addfeedback")]
         public IActionResult AddFeedback(FeedbackModel feedback)
