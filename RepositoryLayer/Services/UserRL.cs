@@ -119,7 +119,7 @@ namespace RepositoryLayer.Services
                 {
                     Subject = new ClaimsIdentity(new[]
                     {
-                        new Claim(ClaimTypes.Role, "Admin"),
+                       new Claim(ClaimTypes.Role, "Users"),
                         new Claim(ClaimTypes.Email, email),
                         new Claim("UserId", UserId.ToString())
                 }),
@@ -154,6 +154,8 @@ namespace RepositoryLayer.Services
                     SqlCommand que = new SqlCommand(query, con);
                     var Id = cmd.ExecuteScalar();
                     var token = GenerateSecurityToken(Emailid, Id.ToString());
+                    MSMQ mSMQ = new MSMQ();
+                    mSMQ.sendData2Queue(token);
                     return token;
                 }
                 con.Close();

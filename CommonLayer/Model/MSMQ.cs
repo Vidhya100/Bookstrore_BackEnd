@@ -36,11 +36,11 @@ namespace CommonLayer.Model
                 var msg = MessageQ.EndReceive(e.AsyncResult);
                 string token = msg.Body.ToString();
                 string subject = "BookStore App Reset Link";
-                string body = token;
+                string body = "http://localhost:4200/resetPassword?" + token;
                 var SMTP = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,
-                    Credentials = new NetworkCredential("vighneshmundhe7@gmail.com", "ftbzbmxgzwnxbceo "),
+                    Credentials = new NetworkCredential("vighneshmundhe7@gmail.com", "xwsfqsztefeurdyz"),
                     EnableSsl = true
                 };
                 SMTP.Send("vighneshmundhe7@gmail.com", "vighneshmundhe7@gmail.com", subject, body);
