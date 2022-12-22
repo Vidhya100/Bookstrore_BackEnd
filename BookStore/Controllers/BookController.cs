@@ -40,7 +40,7 @@ namespace BookStore.Controllers
             }
         }
         
-        [HttpPost]
+        [HttpGet]
         [Route("GetAllBooks")]
         public IActionResult GetAllBooks()
         {

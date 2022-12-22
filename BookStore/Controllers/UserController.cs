@@ -74,7 +74,7 @@ namespace BookStore.Controllers
                 var resultLog = iuserBL.ForgetPassword(email);
                 if (resultLog != null)
                 {
-                    return Ok(new { success = true, message = "Reset Email Send" });
+                    return Ok(new { success = true, message = "Reset Email Send",  data = resultLog });
                 }
                 else
                 {
@@ -87,7 +87,7 @@ namespace BookStore.Controllers
             }
         }
         [Authorize(Roles = Role.Users)]
-        [HttpPut]
+        [HttpPost]
         [Route("ResetPassword")]
         public IActionResult ResetPassword(string newPassword, string confirmPassword)
         {
