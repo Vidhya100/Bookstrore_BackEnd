@@ -448,3 +448,6 @@ select * from Cart
 select * from Orders
 select * from Address;
 select * from Feedback
+
+DELETE FROM Book
+  WHERE BookId = '25'

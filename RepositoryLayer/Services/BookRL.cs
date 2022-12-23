@@ -90,6 +90,9 @@ namespace RepositoryLayer.Services
                             bookModel.OriginalPrice = Convert.ToInt32(rd["OriginalPrice"] == DBNull.Value ? default : rd["OriginalPrice"]);
                             bookModel.BookDetail = Convert.ToString(rd["BookDetail"] == DBNull.Value ? default : rd["BookDetail"]);
                             bookModel.BookImage = Convert.ToString(rd["BookImage"] == DBNull.Value ? default : rd["BookImage"]);
+                            //if(bookModel.BookId==11)
+                            //this string added for taking image from assets folder
+                                bookModel.BookImage = "../../../assets/"+ bookModel.BookImage;
                             bookModel.BookQuantity = Convert.ToInt32(rd["BookQuantity"] == DBNull.Value ? default : rd["BookQuantity"]);
 
 
