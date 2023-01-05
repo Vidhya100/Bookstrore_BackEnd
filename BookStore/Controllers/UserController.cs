@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Security.Claims;
 
 namespace BookStore.Controllers
@@ -107,6 +108,30 @@ namespace BookStore.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles = Role.Users)]
+        [HttpGet]
+        [Route("GetUserDetails")]
+        public IActionResult GetUerDetails()
+        {
+            try
+            {
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+                var result = iuserBL.GetUserdetails(userId);
+                if (result != null)
+                {
+                    return this.Ok(new { Status = true, Message = "User data", Data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { Status = false, Message = "Failed to fetch" });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

@@ -11,5 +11,7 @@ namespace RepositoryLayer.Interface
         public string UserLogin(UserLoginModel userLoginModel);
         public string ForgetPassword(string Emailid);
         public bool ResetPassword(string email, string newpassword, string confirmpassword);
+        public List<GetUserModel> GetUserdetails(int userId);
+
     }
 }

@@ -55,6 +55,16 @@ begin
 	update Users set Password=@Password where  EmailId=@EmailId
 END
 
+---get user detail--
+alter procedure spGetUser
+	@UserId INT
+as 
+begin
+	select UserId,FullName,MobileNumber from Users where UserId = @UserId;
+end
+
+spGetUser 14
+
 --Admin table--
 create table Admin(
 	AdminId int identity (1,1) primary key,
@@ -287,34 +297,42 @@ select * from AddressType;
 
 create table Address(
 	AddressId int identity(1,1) primary key,
-	Address varchar(max) not null,
+	Address varchar(max) not null,	
 	City varchar(100) not null,
 	State varchar(100) not null,
 	TypeId int not null foreign key (TypeId) references AddressType(TypeId),
 	UserId int not null foreign key (UserId) references Users(UserId)
 	)
 
+alter table Address Add Fullname varchar(100),
+	MobileNumber INT;
+alter table Address drop column MobileNumber;
+alter table Address add MobileNumber INT
 --select table--
 select * from Address;
 
 --add address--
-create procedure spAddAddress(
+alter procedure spAddAddress(
 	@Address varchar(max),
 	@City varchar(100),
 	@State varchar(100),
 	@TypeId int,
-	@UserId int
+	@UserId int,
+	@Fullname varchar(100),
+	@MobileNumber INT
 	)
 as
 begin
 	insert into Address
-	values(@Address,@City,@State,@TypeId,@UserId);
+	values(@Address,@City,@State,@TypeId,@UserId,@Fullname,@MobileNumber);
 end
 
 --update address--
-create procedure spUpdateAddress(
+alter procedure spUpdateAddress(
 	@AddressId int,
 	@Address varchar(max),
+	@Fullname varchar(100),
+	@MobileNumber INT,
 	@City varchar(100),
 	@State varchar(100),
 	@TypeId int,
@@ -323,7 +341,7 @@ create procedure spUpdateAddress(
 as
 begin
 	update Address set
-	Address=@Address,City=@City,State=@State,TypeId=@TypeId where UserId=@UserId and AddressId=@AddressId;
+	Address=@Address,Fullname=@Fullname,MobileNumber=@MobileNumber,City=@City,State=@State,TypeId=@TypeId where UserId=@UserId and AddressId=@AddressId;
 end
 
 --update address--
@@ -348,7 +366,7 @@ create table Orders(
 --select table--
 select * from Orders
 
-create procedure spAddOrder(
+alter procedure spAddOrder(
 	@UserId int,
 	@BookId int,
 	@AddressId int
@@ -357,8 +375,6 @@ as
 	declare @TotalPrice int;
 	declare @OrderQty int;
 begin
-	if(exists(select * from Book where BookId = @BookId))
-	begin
 		set @TotalPrice = (select DiscountPrice from Book where BookId = @BookId);
 		set @OrderQty = (select BookQuantity from Cart where BookId = @BookId); 
 
@@ -367,7 +383,6 @@ begin
 		insert into Orders values(@OrderQty,@TotalPrice,GETDATE(),@UserId,@BookId,@AddressId);
 		update Book set BookQuantity = (BookQuantity - @OrderQty) where BookId = @BookId;
 		delete from Cart where BookId = @BookId and UserId = @UserId; 
-	end
 end
 	
 	
@@ -406,7 +421,7 @@ select * from Feedback
 
 --Stored procedures--
 --add feedback--
-create procedure spAddFeedback(
+alter procedure spAddFeedback(
 	@Rating float,
 	@Comment varchar(max),
 	@BookId int,
@@ -415,14 +430,8 @@ create procedure spAddFeedback(
 as
 	declare @TotalRating float;
 begin
-	if(not exists(select * from Feedback where BookId=@BookId and UserId=@UserId))
-	begin
+	
 		insert into Feedback values(@Rating,@Comment,@BookId,@UserId);
-
-		select @TotalRating = avg(@Rating) from Book where BookId = @BookId;
-
-		Update Book set Rating = @TotalRating, ReviewerCount = (ReviewerCount+1) where BookId=@BookId;
-	end
 end
 
 --get feedback--

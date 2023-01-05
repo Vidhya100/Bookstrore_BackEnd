@@ -199,6 +199,48 @@ namespace RepositoryLayer.Services
 
                     throw;
                 }
-            }        
+            }
+        //for get user details
+        public List<GetUserModel> GetUserdetails(int userId)
+        {
+            using SqlConnection con = new SqlConnection(iConfiguration["ConnectionStrings:BookStoreDB"]);
+            try
+            {
+
+                List<GetUserModel> userList = new List<GetUserModel>();
+
+                SqlCommand cmd = new SqlCommand("spGetUser", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+
+                if (rdr.HasRows)
+                {
+                    while (rdr.Read())
+                    {
+                        GetUserModel getUser = new GetUserModel();
+
+                        getUser.UserId = Convert.ToInt32(rdr["UserId"] == DBNull.Value ? default : rdr["UserId"]);
+                        getUser.FullName = Convert.ToString(rdr["FullName"] == DBNull.Value ? default : rdr["FullName"]);
+                        getUser.MobileNumber = (long)Convert.ToDouble(rdr["MobileNumber"] == DBNull.Value ? default : rdr["MobileNumber"]);
+                        userList.Add(getUser);
+
+                    }
+                    return userList;
+                }
+                else
+                {
+                    con.Close();
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

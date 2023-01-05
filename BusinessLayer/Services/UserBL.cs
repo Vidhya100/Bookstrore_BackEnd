@@ -60,5 +60,16 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
+        public List<GetUserModel> GetUserdetails(int userId)
+        {
+            try
+            {
+                return iuserRL.GetUserdetails(userId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }
