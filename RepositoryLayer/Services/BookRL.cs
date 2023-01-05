@@ -133,7 +133,8 @@ namespace RepositoryLayer.Services
                             bookModel.OriginalPrice = Convert.ToInt32(rd["OriginalPrice"] == DBNull.Value ? default : rd["OriginalPrice"]);
                             bookModel.BookDetail = Convert.ToString(rd["BookDetail"] == DBNull.Value ? default : rd["BookDetail"]);
                             bookModel.BookImage = Convert.ToString(rd["BookImage"] == DBNull.Value ? default : rd["BookImage"]);
-                            bookModel.BookQuantity = Convert.ToInt32(rd["BookQuantity"] == DBNull.Value ? default : rd["BookQuantity"]);
+                        bookModel.BookImage = "../../../assets/" + bookModel.BookImage;
+                        bookModel.BookQuantity = Convert.ToInt32(rd["BookQuantity"] == DBNull.Value ? default : rd["BookQuantity"]);
                         }
                         return bookModel;
                     }

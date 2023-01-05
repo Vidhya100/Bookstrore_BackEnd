@@ -25,6 +25,8 @@ namespace RepositoryLayer.Services
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.AddWithValue("@Address", address.Address);
+                command.Parameters.AddWithValue("@Fullname", address.Fullname);
+                command.Parameters.AddWithValue("@MobileNumber", address.MobileNumber);
                 command.Parameters.AddWithValue("@City", address.City);
                 command.Parameters.AddWithValue("@State", address.State);
                 command.Parameters.AddWithValue("@TypeId", address.Type);
@@ -59,6 +61,8 @@ namespace RepositoryLayer.Services
 
                 command.Parameters.AddWithValue("@AddressId", address.AddressId);
                 command.Parameters.AddWithValue("@Address", address.Address);
+                command.Parameters.AddWithValue("@Fullname", address.Fullname);
+                command.Parameters.AddWithValue("@MobileNumber", address.MobileNumber);
                 command.Parameters.AddWithValue("@City", address.City);
                 command.Parameters.AddWithValue("@State", address.State);
                 command.Parameters.AddWithValue("@TypeId", address.Type);
@@ -119,7 +123,7 @@ namespace RepositoryLayer.Services
                 List<AddressModel> addressList = new List<AddressModel>();
 
                 con.Open();
-                String query = "SELECT AddressId, Address, City, State, TypeId FROM Address WHERE UserId = '" + UserId + "'";
+                String query = "SELECT AddressId, Address,Fullname, MobileNumber, City, State, TypeId FROM Address WHERE UserId = '" + UserId + "'";
                 SqlCommand cmd = new SqlCommand(query, con);
                 SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -130,6 +134,8 @@ namespace RepositoryLayer.Services
                         AddressModel address = new AddressModel();
                         address.AddressId = Convert.ToInt32(rdr["Addressid"] == DBNull.Value ? default : rdr["Addressid"]);
                         address.Address = Convert.ToString(rdr["Address"] == DBNull.Value ? default : rdr["Address"]);
+                        address.Fullname = Convert.ToString(rdr["Fullname"] == DBNull.Value ? default : rdr["Fullname"]);
+                        address.MobileNumber = Convert.ToInt32(rdr["MobileNumber"] == DBNull.Value ? default : rdr["MobileNumber"]);
                         address.City = Convert.ToString(rdr["City"] == DBNull.Value ? default : rdr["City"]);
                         address.State = Convert.ToString(rdr["State"] == DBNull.Value ? default : rdr["State"]);
                         address.Type = Convert.ToInt32(rdr["TypeId"] == DBNull.Value ? default : rdr["TypeId"]);

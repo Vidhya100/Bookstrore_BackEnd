@@ -132,6 +132,8 @@ namespace RepositoryLayer.Services
                         cart.BookName = Convert.ToString(rdr["BookName"] == DBNull.Value ? default : rdr["BookName"]);
                         cart.AuthorName = Convert.ToString(rdr["AuthorName"] == DBNull.Value ? default : rdr["AuthorName"]);
                         cart.BookImage = Convert.ToString(rdr["BookImage"] == DBNull.Value ? default : rdr["BookImage"]);
+                        //this string added for taking image from assets folder
+                        cart.BookImage = "../../../assets/" + cart.BookImage;
                         cart.DiscountPrice = Convert.ToInt32(rdr["DiscountPrice"] == DBNull.Value ? default : rdr["DiscountPrice"]);
                         cart.OriginalPrice = Convert.ToInt32(rdr["OriginalPrice"] == DBNull.Value ? default : rdr["OriginalPrice"]);
                         cart.BookQuantity = Convert.ToInt32(rdr["BookQuantity"] == DBNull.Value ? default : rdr["BookQuantity"]);

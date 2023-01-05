@@ -42,7 +42,7 @@ namespace BookStore.Controllers
                 throw ;
             }
         }
-        [HttpPost]
+        [HttpDelete]
         [Route("DeleteFromWishlist")]
         public IActionResult RemoveFromWishlist(int wishlistId)
         {
@@ -64,7 +64,7 @@ namespace BookStore.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpGet]
         [Route("GetFromWishlist")]
         public IActionResult GetWishlistItem()
         {

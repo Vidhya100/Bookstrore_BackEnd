@@ -71,6 +71,11 @@ namespace RepositoryLayer.Services
                         order.BookId = Convert.ToInt32(reader["BookId"] == DBNull.Value ? default : reader["BookId"]);
                         order.UserId = Convert.ToInt32(reader["UserId"] == DBNull.Value ? default : reader["UserId"]);
                         order.AddressId = Convert.ToInt32(reader["AddressId"] == DBNull.Value ? default : reader["AddressId"]);
+                        order.BookName = Convert.ToString(reader["BookName"] == DBNull.Value ? default : reader["BookName"]);
+                        order.AuthorName = Convert.ToString(reader["AuthorName"] == DBNull.Value ? default : reader["AuthorName"]);
+                        order.BookImage = Convert.ToString(reader["BookImage"] == DBNull.Value ? default : reader["BookImage"]);
+                        //this string added for taking image from assets folder
+                        order.BookImage = "../../../assets/" + order.BookImage;
                         order.TotalPrice = Convert.ToDouble(reader["TotalPrice"] == DBNull.Value ? default : reader["TotalPrice"]);
                         order.OrderQty = Convert.ToInt32(reader["OrderQty"] == DBNull.Value ? default : reader["OrderQty"]);
                         order.OrderDate = Convert.ToDateTime(reader["OrderDate"] == DBNull.Value ? default : reader["OrderDate"]);
